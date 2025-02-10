@@ -1,12 +1,12 @@
 /**
- * 高阶组件工厂函数
- * @param {Function[]} middlewares 中间件函数数组
- * @returns {Function} 包装后的高阶组件
+ * HOC factory function
+ * @param {Function[]} middlewares - Array of middleware functions
+ * @returns {Function} Wrapped HOC
  */
 const withMiddleware = (...middlewares) => (handler) => {
   return async (req, res, next) => {
     try {
-      // 顺序执行中间件
+      // Execute middlewares sequentially
       for (const middleware of middlewares) {
         await new Promise((resolve, reject) => {
           middleware(req, res, (err) => {
@@ -14,7 +14,7 @@ const withMiddleware = (...middlewares) => (handler) => {
           })
         })
       }
-      // 执行主处理逻辑
+      // Execute main handler logic
       await handler(req, res, next)
     } catch (error) {
       next(error)

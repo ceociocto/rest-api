@@ -2,7 +2,7 @@ const router = require('express').Router()
 const HOC = require('../utils/hoc')
 const OrderController = require('../controllers/order.controller')
 
-// 组合式HOC应用
+// Composed HOC applications
 const withOrderSecurity = HOC.withAuth(['admin', 'order_manager'])
 const withAdvancedProtection = HOC.withCacheAndRateLimit({
   ttl: 60,
@@ -10,7 +10,7 @@ const withAdvancedProtection = HOC.withCacheAndRateLimit({
   max: 100
 })
 
-// 创建订单（认证+缓存+限流）
+// Create order (auth + cache + rate limit)
 router.post(
   '/orders',
   withOrderSecurity(
@@ -20,7 +20,7 @@ router.post(
   )
 )
 
-// 查询订单（带错误处理）
+// Get order with error handling
 router.get(
   '/orders/:id',
   HOC.withErrorHandling(

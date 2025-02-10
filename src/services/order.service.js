@@ -7,7 +7,7 @@ class OrderService {
     this.paymentClient = new CustomHttpClient(process.env.PAYMENT_SERVICE_URL)
   }
 
-  // 组合订单创建流程
+  // Composite order creation process
   async createOrder(orderData) {
     const [inventoryCheck, paymentAuth] = await Promise.all([
       this.inventoryClient.post('/stock/verify', {
@@ -27,12 +27,12 @@ class OrderService {
       throw new Error('PAYMENT_AUTH_FAILED')
     }
 
-    // 调用领域服务创建订单
+    // Call domain service to create order
     return this.domainClient.post('/orders', orderData)
   }
 
-  // 带缓存的订单查询
-  @cache({ ttl: 60 }) // 缓存60秒
+  // Cached order query with 60s TTL
+  @cache({ ttl: 60 })
   async getOrder(orderId) {
     const [order, payment, logistics] = await Promise.all([
       this.domainClient.get(`/orders/${orderId}`),

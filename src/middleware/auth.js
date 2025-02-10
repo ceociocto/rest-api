@@ -1,14 +1,14 @@
 const jwt = require('express-jwt')
 const { ForbiddenError } = require('../utils/errors')
 
-// JWT认证
+// JWT authentication
 const authenticate = jwt({
   secret: process.env.JWT_SECRET,
   algorithms: ['HS256'],
   requestProperty: 'auth'
 })
 
-// 权限控制
+// Role-based access control
 const authorize = (roles) => (req, res, next) => {
   if (!roles.includes(req.auth.role)) {
     return next(new ForbiddenError('Insufficient permissions'))
@@ -16,7 +16,7 @@ const authorize = (roles) => (req, res, next) => {
   next()
 }
 
-// API密钥验证
+// API key validation
 const apiKeyAuth = (req, res, next) => {
   const apiKey = req.get('X-API-KEY')
   if (!apiKey || apiKey !== process.env.API_KEY) {

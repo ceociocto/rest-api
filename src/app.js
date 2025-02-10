@@ -6,7 +6,7 @@ const routes = require('./routes')
 
 const app = express()
 
-// 安全中间件
+// Security middleware
 app.use(helmet())
 app.use(cors({
   origin: process.env.CORS_ORIGINS.split(','),
@@ -14,24 +14,24 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 }))
 
-// 请求处理中间件
+// Request processing middleware
 app.use(express.json({ limit: '1mb' }))
 app.use(express.urlencoded({ extended: true }))
-app.use(require('express-request-id')()) // 请求ID追踪
+app.use(require('express-request-id')()) // Request ID tracking
 
-// 日志中间件
+// Logging middleware
 app.use(apiLogger)
 
 // API路由
 app.use('/api/v1', routes)
 
-// 健康检查端点
+// Health check endpoint
 app.get('/health', (req, res) => res.json({ 
   status: 'UP',
   timestamp: new Date().toISOString()
 }))
 
-// 全局错误处理
+// Global error handling
 app.use(errorHandler)
 
 module.exports = app 
