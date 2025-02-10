@@ -25,4 +25,30 @@ const apiKeyAuth = (req, res, next) => {
   next()
 }
 
+// 客户端请求认证
+const userAuth = jwt({
+  secret: process.env.USER_JWT_SECRET,
+  algorithms: ['HS256']
+})
+
+// 服务间认证
+const serviceAuth = (req, res, next) => {
+  const cert = req.get('X-Service-Cert')
+  verifyServiceCertificate(cert) // 验证服务证书
+  next()
+}
+
+// 混合认证模式
+export const hybridAuth = (type) => {
+  return (req, res, next) => {
+    if (req.headers.authorization) {
+      return userAuth(req, res, next)
+    }
+    if (req.headers['x-service-cert']) {
+      return serviceAuth(req, res, next)
+    }
+    next(new AuthenticationError('Missing credentials'))
+  }
+}
+
 module.exports = { authenticate, authorize, apiKeyAuth } 

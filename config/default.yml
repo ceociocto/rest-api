@@ -1,0 +1,24 @@
+server:
+  port: 3000
+  corsOrigins: "http://localhost:8080,http://127.0.0.1:8080"
+  rateLimit:
+    windowMs: 900000 # 15 minutes
+    max: 100
+
+security:
+  jwtSecret: "your_jwt_secret_here"
+  apiKey: "your_api_key_here"
+  sessionTTL: 3600 # 1 hour
+
+services:
+  memberService: "http://member-service:3001"
+  calculationService: "http://calculation-service:3002"
+  paymentService: "http://payment-service:3003"
+
+logging:
+  level: "info"
+  format: "json"
+
+redis:
+  host: "localhost"
+  port: 6379 
